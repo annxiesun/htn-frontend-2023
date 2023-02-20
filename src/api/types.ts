@@ -1,6 +1,6 @@
 // Each event will belong to one of the following types
-type TEventType = "workshop" | "activity" | "tech_talk";
-type TPermission = "public" | "private";
+type TEventType = 'workshop' | 'activity' | 'tech_talk';
+type TPermission = 'public' | 'private';
 
 type TSpeaker = {
   name: string;
