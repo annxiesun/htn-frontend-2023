@@ -12,7 +12,11 @@ import {
   filterOptions,
 } from '../../contexts/dashboard'
 import { Button, List, Space, Typography } from 'antd'
-import { DownOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  ArrowLeftOutlined,
+  DownOutlined,
+  UserOutlined,
+} from '@ant-design/icons'
 import { Select, Tag } from 'antd'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import styles from './eventList.module.css'
@@ -72,7 +76,12 @@ const EventList = (): JSX.Element => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <Title level={3} className={styles.title}>{'Events'}</Title>
+        <span className={styles.header}>
+          <a href="/"><ArrowLeftOutlined /></a>
+          <Title level={3} className={styles.title}>
+            {'Events'}
+          </Title>
+        </span>
         <div className={styles.controls}>
           <div>
             <Typography.Text>{'Sort by: '}</Typography.Text>

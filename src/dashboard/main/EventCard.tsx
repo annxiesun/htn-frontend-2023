@@ -3,7 +3,7 @@ import {
   ShareAltOutlined,
   UnlockOutlined,
 } from '@ant-design/icons'
-import { Badge, Card, List } from 'antd'
+import { Badge, Card, List, Popover } from 'antd'
 import moment from 'moment'
 import React from 'react'
 import { Route } from 'react-router-dom'
@@ -41,8 +41,8 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
   const startTime = moment.utc(start_time).format(timeFormat)
   const endTime = moment.utc(end_time).format(timeFormat)
 
-  const getShareUrl = () => {
-    return `/events/${id}`
+  const copyShareUrl = () => {
+    navigator.clipboard.writeText(window.location.hostname + `/events/${id}`)
   }
 
   return (
@@ -61,8 +61,10 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
               <LinkOutlined />
             </a>
           )}
-          <a href={getShareUrl()}>
-            <ShareAltOutlined />
+          <a onClick={copyShareUrl}>
+            <Popover content={'Copied!'} trigger="click">
+              <ShareAltOutlined />
+            </Popover>
           </a>
         </span>
       }
