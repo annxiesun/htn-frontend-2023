@@ -158,14 +158,25 @@ function getEventListMiddleware(
   state: DashboardState,
   dispatch: React.Dispatch<Action>
 ) {
+  dispatch(setLoadingAction(true))
   getEvents()
     .then((res: TEvent[]) => {
       dispatch(setEventListAction(res))
+      dispatch(setLoadingAction(false))
     })
     .catch((e) => {
       console.log(e)
       dispatch(setErrorAction())
+      dispatch(setLoadingAction(false))
     })
+}
+
+function setLoadingActionHandler(
+  state: DashboardState,
+  action: SetLoadingAction
+): DashboardState {
+  const { value } = action
+  return { ...state, isLoading: value }
 }
 
 function setSortActionHandler(
@@ -193,7 +204,7 @@ function sortAndFilter(
     return false
   })
   eventsCopy.sort(sortOptions[sortBy].comparator)
-  
+
   //NOTE(annies): Can do both filters at the same time (minor time save)
   if (!authenticated) {
     eventsCopy = eventsCopy.filter((event) => {
@@ -239,13 +250,9 @@ function eventListReducer(
   case ActionType.SetEventList: {
     const { events } = action
     const { sortBy, filterBy, authenticated } = state
-    
+
     const eventsCopy = sortAndFilter(events, sortBy, filterBy, authenticated)
     next = { ...state, events, eventsDisplay: eventsCopy }
-    break
-  }
-  case ActionType.SetLoading: {
-    next = { ...state }
     break
   }
   case ActionType.SetSort: {
@@ -258,6 +265,10 @@ function eventListReducer(
   }
   case ActionType.SetAuthenticated: {
     next = setAuthenticatedActionHandler(state, action)
+    break
+  }
+  case ActionType.SetLoading: {
+    next = setLoadingActionHandler(state, action)
     break
   }
   default: {
