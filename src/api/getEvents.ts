@@ -5,7 +5,6 @@ export function getEvents(): Promise<TEvent[]> {
     fetch('https://api.hackthenorth.com/v3/events')
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
         resolve(data)
       }).catch((e) => {
         console.log(e)
@@ -23,7 +22,6 @@ export function getEvent(eventId: number): Promise<TEvent> {
     }
     fetch(`https://api.hackthenorth.com/v3/events/${eventId}`)
       .then((response) => {
-        console.log(response)
         return response.json()
       })
       .then((data) => {
