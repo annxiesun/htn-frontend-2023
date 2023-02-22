@@ -11,10 +11,12 @@ import {
   FilterOption,
   filterOptions,
 } from '../../contexts/dashboard'
-import { Button, Space } from 'antd'
+import { Button, List, Space, Typography } from 'antd'
 import { DownOutlined, UserOutlined } from '@ant-design/icons'
 import { Select, Tag } from 'antd'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
+import styles from './eventList.module.css'
+import Title from 'antd/es/typography/Title'
 
 const options = filterOptions
 
@@ -22,10 +24,10 @@ type ColorMap = {
   [key in TEventType]: string
 }
 
-const COLORS: ColorMap = {
-  activity: '#f2da96',
-  tech_talk: '#f2da96',
-  workshop: '#f2da96',
+export const COLORS: ColorMap = {
+  activity: '#B298DC',
+  tech_talk: '#94B8E2',
+  workshop: '#87CECC',
 }
 
 const tagRender = (props: CustomTagProps) => {
@@ -67,31 +69,47 @@ const EventList = (): JSX.Element => {
     getEventList()
   }, [])
 
-  //options.filter((opt) => !filterBy.includes(opt.value))
-
   return (
-    <>
-      <Select
-        defaultValue={sortBy}
-        style={{ width: '100%' }}
-        onChange={handleSortChange}
-        options={sortOptions}
-      />
-      <Select
-        mode="multiple"
-        defaultValue={filterBy}
-        showArrow
-        onChange={handleFilterChange}
-        tagRender={tagRender}
-        style={{ width: '100%' }}
-        options={options}
-      />
-      <div>
-        {eventsDisplay.map((event: TEvent) => (
-          <EventCard key={uniqid()} event={event} />
-        ))}
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <Title level={3} className={styles.title}>{'Events'}</Title>
+        <div className={styles.controls}>
+          <div>
+            <Typography.Text>{'Sort by: '}</Typography.Text>
+            <Select
+              defaultValue={sortBy}
+              onChange={handleSortChange}
+              options={sortOptions}
+              className={styles.select}
+            />
+          </div>
+          <div>
+            <Typography.Text>{'Filter by: '}</Typography.Text>
+            <Select
+              mode="multiple"
+              defaultValue={filterBy}
+              showArrow
+              onChange={handleFilterChange}
+              tagRender={tagRender}
+              className={styles.select}
+              options={options}
+            />
+          </div>
+        </div>
+        <List
+          itemLayout="vertical"
+          size="large"
+          pagination={{
+            onChange: (page) => {
+              console.log(page)
+            },
+            pageSize: 3,
+          }}
+          dataSource={eventsDisplay}
+          renderItem={(event) => <EventCard key={uniqid()} event={event} />}
+        />
       </div>
-    </>
+    </div>
   )
 }
 

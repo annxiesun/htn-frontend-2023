@@ -14,10 +14,9 @@ export const sortOptions: SortOption[] = [
     label: 'Upcoming',
     value: 0,
     comparator: (e1, e2) => {
-      if(e1.start_time > e2.start_time) {
+      if (e1.start_time < e2.start_time) {
         return 1
-      }
-      else {
+      } else {
         return -1
       }
     },
@@ -26,10 +25,9 @@ export const sortOptions: SortOption[] = [
     label: 'Alphabetical',
     value: 1,
     comparator: (e1, e2) => {
-      if(e1.name > e2.name) {
+      if (e1.name > e2.name) {
         return 1
-      }
-      else {
+      } else {
         return -1
       }
     },
@@ -164,16 +162,22 @@ function setSortActionHandler(
 
   const { events, filterBy } = state
 
-  let eventsCopy = [...events]
+  const eventsCopy = sortAndFilter(events, value, filterBy)
+  return { ...state, sortBy: value, eventsDisplay: eventsCopy }
+}
 
+function sortAndFilter(
+  events: TEvent[],
+  sortBy: number,
+  filterBy: TEventType[]
+) {
+  let eventsCopy = [...events]
   eventsCopy = eventsCopy.filter((event) => {
     if (filterBy.includes(event.event_type)) return true
     return false
   })
-
-  eventsCopy.sort(comparator)
-
-  return { ...state, sortBy: value, eventsDisplay: eventsCopy }
+  eventsCopy.sort(sortOptions[sortBy].comparator)
+  return eventsCopy
 }
 
 function setFilterActionHandler(
@@ -183,12 +187,7 @@ function setFilterActionHandler(
   const { value } = action
   const { events, sortBy } = state
 
-  let eventsCopy = [...events]
-  eventsCopy = eventsCopy.filter((event) => {
-    if (value.includes(event.event_type)) return true
-    return false
-  })
-  eventsCopy.sort(sortOptions[sortBy].comparator)
+  const eventsCopy = sortAndFilter(events, sortBy, value)
 
   return {
     ...state,
@@ -206,7 +205,8 @@ function eventListReducer(
   switch (action.type) {
   case ActionType.SetEventList: {
     const { events } = action
-    next = { ...state, events, eventsDisplay: events }
+    const eventsCopy = sortAndFilter(events, state.sortBy, state.filterBy)
+    next = { ...state, events, eventsDisplay: eventsCopy }
     break
   }
   case ActionType.SetLoading: {

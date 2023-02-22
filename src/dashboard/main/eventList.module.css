@@ -1,0 +1,35 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 0px 25px;
+}
+
+.select {
+  width: 300px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 15px;
+}
+
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+}
+
+@media screen and (max-width: 800px) {
+  .controls {
+    gap: 10px;
+  }
+  .select {
+    width: auto;
+  }
+  
+}
+
+.title {
+  padding: 0px 25px;
+}

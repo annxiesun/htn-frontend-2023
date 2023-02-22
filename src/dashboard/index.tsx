@@ -6,6 +6,7 @@ import EventCard from './main/EventCard'
 import EventList from './main/EventList'
 import EventPage from './event/EventPage'
 import {  DashboardContextProvider } from '../contexts/dashboard'
+import Login from './login'
 
 export const Dashboard = (): JSX.Element => {
   return (
@@ -13,6 +14,7 @@ export const Dashboard = (): JSX.Element => {
       <Routes>
         <Route path="/events" element={<DashboardContextProvider><EventList /></DashboardContextProvider>} />
         <Route path="/events/:eventId" element={<EventPage />} />;
+        <Route path="/" element={<Login />} />;
       </Routes>
     </>
   )
