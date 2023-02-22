@@ -1,6 +1,7 @@
 {
   "name": "htn-frontend-2022",
   "version": "0.1.0",
+  "homepage": "https://annxiesun.github.io/htn-frontend-2023/",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -13,6 +14,7 @@
     "@types/react-dom": "^18.0.11",
     "antd": "^5.2.2",
     "eslint-config-prettier": "^8.6.0",
+    "gh-pages": "^5.0.0",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -25,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -46,6 +50,7 @@
     ]
   },
   "devDependencies": {
+    "@types/gh-pages": "^3.2.1",
     "@types/uniqid": "^5.3.2",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
