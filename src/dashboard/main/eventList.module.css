@@ -20,7 +20,7 @@
   height: 100vh;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 823px) {
   .controls {
     gap: 10px;
   }
@@ -39,4 +39,8 @@
   gap: 10px;
   align-items: center;
   padding: 0px 25px;
+}
+
+.tag {
+  margin-right: 3px;
 }

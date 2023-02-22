@@ -5,11 +5,12 @@ import {
 } from '@ant-design/icons'
 import { Badge, Card, List, Popover } from 'antd'
 import moment from 'moment'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { TEvent } from '../../types/types'
 import styles from './eventCardStyle.module.css'
-import { COLORS } from './EventList'
+import { COLORS } from '../../constants'
+import { useDashboardContext } from '../../contexts/dashboard'
 
 interface EventCardProps {
   event: TEvent
@@ -32,6 +33,8 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
     private_url,
     related_events,
   } = event
+  const { state } = useDashboardContext()
+  const { authenticated } = state
 
   const startDate = moment.utc(start_time).format(dateFormat)
 
@@ -51,7 +54,7 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
       className={styles.eventCard}
       extra={
         <span className={styles.iconButtons}>
-          {private_url && (
+          {(private_url && authenticated) &&(
             <a href={private_url}>
               <UnlockOutlined />
             </a>
@@ -70,9 +73,6 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
       }
     >
       <List.Item.Meta
-        style={{
-          width: '80%',
-        }}
         title={
           <div className={styles.primaryInfo}>
             <>{`${name}`}</>
@@ -86,7 +86,7 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
             )}
             <Badge
               color={COLORS[event_type]}
-              style={{ textTransform: 'capitalize' }}
+              className={styles.badge}
               count={event_type.replaceAll('_', ' ')}
             />
           </div>

@@ -26,10 +26,13 @@
   white-space: pre-wrap;
   line-height: 1.5em;
   height: 3em;
-
 }
 
 .iconButtons {
   display: flex;
   gap: 5px;
+}
+
+.badge {
+  text-transform: capitalize;
 }
