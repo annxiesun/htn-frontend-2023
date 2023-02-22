@@ -60,6 +60,7 @@ interface DashboardState {
   isLoading: boolean
   sortBy: number
   filterBy: TEventType[]
+  authenticated: boolean
 }
 
 interface DashboardContextProviderType {
@@ -72,6 +73,7 @@ const initialState: DashboardState = {
   isLoading: false,
   sortBy: 0,
   filterBy: filterOptions.map((opt) => opt.value),
+  authenticated: false,
 }
 
 enum ActionType {
@@ -80,6 +82,7 @@ enum ActionType {
   SetLoading = 'SET_LOADING',
   SetSort = 'SET_SORT',
   SetFilter = 'SET_FILTER',
+  SetAuthenticated = 'SET_AUTHENTICATED',
 }
 
 interface IAction {
@@ -109,12 +112,18 @@ interface SetFilterAction extends IAction {
   value: TEventType[]
 }
 
+interface SetAuthenticatedAction extends IAction {
+  type: ActionType.SetAuthenticated
+  value: boolean
+}
+
 type Action =
   | SetLoadingAction
   | SetEventListAction
   | SetErrorAction
   | SetSortAction
   | SetFilterAction
+  | SetAuthenticatedAction
 
 const setEventListAction = (events: TEvent[]): SetEventListAction => ({
   type: ActionType.SetEventList,
@@ -140,6 +149,11 @@ const setFilterAction = (value: TEventType[]): SetFilterAction => ({
   value,
 })
 
+const setAuthenticatedAction = (value: boolean): SetAuthenticatedAction => ({
+  type: ActionType.SetAuthenticated,
+  value,
+})
+
 function getEventListMiddleware(
   state: DashboardState,
   dispatch: React.Dispatch<Action>
@@ -148,7 +162,8 @@ function getEventListMiddleware(
     .then((res: TEvent[]) => {
       dispatch(setEventListAction(res))
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e)
       dispatch(setErrorAction())
     })
 }
@@ -160,16 +175,17 @@ function setSortActionHandler(
   const { value } = action
   const { comparator } = sortOptions[value]
 
-  const { events, filterBy } = state
+  const { events, filterBy, authenticated } = state
 
-  const eventsCopy = sortAndFilter(events, value, filterBy)
+  const eventsCopy = sortAndFilter(events, value, filterBy, authenticated)
   return { ...state, sortBy: value, eventsDisplay: eventsCopy }
 }
 
 function sortAndFilter(
   events: TEvent[],
   sortBy: number,
-  filterBy: TEventType[]
+  filterBy: TEventType[],
+  authenticated: boolean
 ) {
   let eventsCopy = [...events]
   eventsCopy = eventsCopy.filter((event) => {
@@ -177,6 +193,15 @@ function sortAndFilter(
     return false
   })
   eventsCopy.sort(sortOptions[sortBy].comparator)
+  
+  //NOTE(annies): Can do both filters at the same time (minor time save)
+  if (!authenticated) {
+    eventsCopy = eventsCopy.filter((event) => {
+      if (event.permission !== 'private') return true
+      return false
+    })
+  }
+
   return eventsCopy
 }
 
@@ -185,15 +210,23 @@ function setFilterActionHandler(
   action: SetFilterAction
 ): DashboardState {
   const { value } = action
-  const { events, sortBy } = state
+  const { events, sortBy, authenticated } = state
 
-  const eventsCopy = sortAndFilter(events, sortBy, value)
+  const eventsCopy = sortAndFilter(events, sortBy, value, authenticated)
 
   return {
     ...state,
     filterBy: value,
     eventsDisplay: eventsCopy,
   }
+}
+
+function setAuthenticatedActionHandler(
+  state: DashboardState,
+  action: SetAuthenticatedAction
+): DashboardState {
+  const { value } = action
+  return { ...state, authenticated: value }
 }
 
 function eventListReducer(
@@ -205,7 +238,9 @@ function eventListReducer(
   switch (action.type) {
   case ActionType.SetEventList: {
     const { events } = action
-    const eventsCopy = sortAndFilter(events, state.sortBy, state.filterBy)
+    const { sortBy, filterBy, authenticated } = state
+    
+    const eventsCopy = sortAndFilter(events, sortBy, filterBy, authenticated)
     next = { ...state, events, eventsDisplay: eventsCopy }
     break
   }
@@ -221,6 +256,10 @@ function eventListReducer(
     next = setFilterActionHandler(state, action)
     break
   }
+  case ActionType.SetAuthenticated: {
+    next = setAuthenticatedActionHandler(state, action)
+    break
+  }
   default: {
     throw new Error(`Unhandled action type: ${action.type}`)
   }
@@ -234,6 +273,7 @@ interface DashboardContextType {
     getEventList: () => void
     setSortAction: (value: number) => void
     setFilterAction: (value: TEventType[]) => void
+    setAuthenticatedAction: (value: boolean) => void
   }
 }
 
@@ -253,6 +293,8 @@ const DashboardContextProvider = ({
       setSortAction: (value: number) => dispatch(setSortAction(value)),
       setFilterAction: (value: TEventType[]) =>
         dispatch(setFilterAction(value)),
+      setAuthenticatedAction: (value: boolean) =>
+        dispatch(setAuthenticatedAction(value)),
     },
   }
 
