@@ -3,11 +3,10 @@ import { Button, Card, Input, Typography } from 'antd'
 import Title from 'antd/es/typography/Title'
 import React, { useEffect, useState } from 'react'
 import styles from './login.module.css'
+import { AUTHENTICATED_KEY } from '../../constants'
 
 const USERNAME = 'chubbybunny'
 const PASSWORD = 'password'
-
-const AUTHENTICATED_KEY = 'authenticated'
 
 const Login = (): JSX.Element => {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -16,14 +15,12 @@ const Login = (): JSX.Element => {
   const [loginSuccess, setLoginSuccess] = useState(false)
 
   useEffect(() => {
-    console.log(localStorage.getItem(AUTHENTICATED_KEY))
     if (localStorage.getItem(AUTHENTICATED_KEY) == 'true') {
       setLoginSuccess(true)
     }
   }, [])
 
   const onLogin = () => {
-    console.log(username, password)
     if (username == USERNAME && password == PASSWORD) {
       setLoginSuccess(true)
       localStorage.setItem(AUTHENTICATED_KEY, 'true')
@@ -69,7 +66,11 @@ const Login = (): JSX.Element => {
           </>
         )}
         <div className={styles.buttonContainer}>
-          {!loginSuccess && (
+          {loginSuccess ? (
+            <Button type="default" onClick={onLogout}>
+              {'Logout'}
+            </Button>
+          ) : (
             <Button type="primary" onClick={onLogin}>
               {'Login'}
             </Button>
@@ -77,11 +78,6 @@ const Login = (): JSX.Element => {
           <Button type="default" href="/events">
             {'See Events'}
           </Button>
-          {loginSuccess && (
-            <Button type="default" onClick={onLogout}>
-              {'Logout'}
-            </Button>
-          )}
         </div>
       </Card>
     </div>

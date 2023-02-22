@@ -21,18 +21,9 @@ import { Select, Tag } from 'antd'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import styles from './eventList.module.css'
 import Title from 'antd/es/typography/Title'
+import { COLORS, AUTHENTICATED_KEY } from '../../constants'
 
 const options = filterOptions
-
-type ColorMap = {
-  [key in TEventType]: string
-}
-
-export const COLORS: ColorMap = {
-  activity: '#B298DC',
-  tech_talk: '#94B8E2',
-  workshop: '#87CECC',
-}
 
 const tagRender = (props: CustomTagProps) => {
   const { label, value, closable, onClose } = props
@@ -49,7 +40,7 @@ const tagRender = (props: CustomTagProps) => {
       onMouseDown={onPreventMouseDown}
       closable={closable}
       onClose={onClose}
-      style={{ marginRight: 3 }}
+      className={styles.tag}
     >
       {label}
     </Tag>
@@ -60,7 +51,13 @@ const EventList = (): JSX.Element => {
   const { state, actions } = useDashboardContext()
 
   const { eventsDisplay, sortBy, filterBy } = state
-  const { getEventList, setSortAction, setFilterAction } = actions
+
+  const {
+    getEventList,
+    setSortAction,
+    setFilterAction,
+    setAuthenticatedAction,
+  } = actions
 
   const handleSortChange = (e: number) => {
     setSortAction(e)
@@ -71,13 +68,18 @@ const EventList = (): JSX.Element => {
 
   useEffect(() => {
     getEventList()
+    if (localStorage.getItem(AUTHENTICATED_KEY) == 'true') {
+      setAuthenticatedAction(true)
+    }
   }, [])
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <span className={styles.header}>
-          <a href="/"><ArrowLeftOutlined /></a>
+          <a href="/">
+            <ArrowLeftOutlined />
+          </a>
           <Title level={3} className={styles.title}>
             {'Events'}
           </Title>
