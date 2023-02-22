@@ -9,22 +9,18 @@ import React, { useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { TEvent } from '../../types/types'
 import styles from './eventCardStyle.module.css'
-import { COLORS } from '../../constants'
+import { COLORS, DATE_FORMAT, TIME_FORMAT } from '../../constants'
 import { useDashboardContext } from '../../contexts/dashboard'
 
 interface EventCardProps {
   event: TEvent
 }
 
-const dateFormat = 'MMMM DD, YYYY'
-const timeFormat = 'hh:mm a'
-
 const EventCard = ({ event }: EventCardProps): JSX.Element => {
   const {
     id,
     name,
     event_type,
-    permission,
     start_time,
     end_time,
     description,
@@ -36,16 +32,18 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
   const { state } = useDashboardContext()
   const { authenticated } = state
 
-  const startDate = moment.utc(start_time).format(dateFormat)
+  const startDate = moment.utc(start_time).format(DATE_FORMAT)
 
   //NOTE(anniesun): start dates and end dates same
-  // const endDate = moment(end_time).format(dateFormat)
+  // const endDate = moment(end_time).format(DATE_FORMAT)
 
-  const startTime = moment.utc(start_time).format(timeFormat)
-  const endTime = moment.utc(end_time).format(timeFormat)
+  const startTime = moment.utc(start_time).format(TIME_FORMAT)
+  const endTime = moment.utc(end_time).format(TIME_FORMAT)
 
+  const url =
+    window.location.protocol + '//' + window.location.host + `/events/${id}`
   const copyShareUrl = () => {
-    navigator.clipboard.writeText(window.location.hostname + `/events/${id}`)
+    navigator.clipboard.writeText(url)
   }
 
   return (
@@ -54,7 +52,7 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
       className={styles.eventCard}
       extra={
         <span className={styles.iconButtons}>
-          {(private_url && authenticated) &&(
+          {private_url && authenticated && (
             <a href={private_url}>
               <UnlockOutlined />
             </a>
@@ -75,7 +73,7 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
       <List.Item.Meta
         title={
           <div className={styles.primaryInfo}>
-            <>{`${name}`}</>
+            <a href={url} className={styles.title}>{`${name}`}</a>
             {speakers.length != 0 && (
               <span className={styles.speaker}>
                 {'by: '}

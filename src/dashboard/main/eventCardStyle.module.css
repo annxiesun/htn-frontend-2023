@@ -36,3 +36,7 @@
 .badge {
   text-transform: capitalize;
 }
+
+.title {
+  color: black
+}
