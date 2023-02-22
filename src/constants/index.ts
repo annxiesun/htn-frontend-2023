@@ -11,3 +11,6 @@ export const COLORS: ColorMap = {
 }
 
 export const AUTHENTICATED_KEY = 'authenticated'
+
+export const DATE_FORMAT = 'MMMM DD, YYYY'
+export const TIME_FORMAT = 'hh:mm a'
