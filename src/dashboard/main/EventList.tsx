@@ -11,7 +11,7 @@ import {
   FilterOption,
   filterOptions,
 } from '../../contexts/dashboard'
-import { Button, List, Space, Typography } from 'antd'
+import { Button, Card, List, Space, Typography } from 'antd'
 import {
   ArrowLeftOutlined,
   DownOutlined,
@@ -22,6 +22,7 @@ import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import styles from './eventList.module.css'
 import Title from 'antd/es/typography/Title'
 import { COLORS, AUTHENTICATED_KEY } from '../../constants'
+import Meta from 'antd/es/card/Meta'
 
 const options = filterOptions
 
@@ -50,13 +51,11 @@ const tagRender = (props: CustomTagProps) => {
 const EventList = (): JSX.Element => {
   const { state, actions } = useDashboardContext()
 
-  const { eventsDisplay, sortBy, filterBy } = state
+  const { eventsDisplay, sortBy, filterBy, isLoading } = state
 
   const {
-    getEventList,
     setSortAction,
     setFilterAction,
-    setAuthenticatedAction,
   } = actions
 
   const handleSortChange = (e: number) => {
@@ -65,13 +64,6 @@ const EventList = (): JSX.Element => {
   const handleFilterChange = (e: TEventType[]) => {
     setFilterAction(e)
   }
-
-  useEffect(() => {
-    getEventList()
-    if (localStorage.getItem(AUTHENTICATED_KEY) == 'true') {
-      setAuthenticatedAction(true)
-    }
-  }, [])
 
   return (
     <div className={styles.wrapper}>
@@ -107,18 +99,24 @@ const EventList = (): JSX.Element => {
             />
           </div>
         </div>
-        <List
-          itemLayout="vertical"
-          size="large"
-          pagination={{
-            onChange: (page) => {
-              console.log(page)
-            },
-            pageSize: 3,
-          }}
-          dataSource={eventsDisplay}
-          renderItem={(event) => <EventCard key={uniqid()} event={event} />}
-        />
+        {isLoading ? (
+          <Card loading>
+            <Meta description="This is the description" />
+          </Card>
+        ) : (
+          <List
+            itemLayout="vertical"
+            size="large"
+            pagination={{
+              onChange: (page) => {
+                console.log(page)
+              },
+              pageSize: 3,
+            }}
+            dataSource={eventsDisplay}
+            renderItem={(event) => <EventCard key={uniqid()} event={event} />}
+          />
+        )}
       </div>
     </div>
   )
