@@ -45,7 +45,7 @@ const Login = (): JSX.Element => {
         ) : (
           <>
             <div className={styles.text}>
-              <Title level={3}>{'Welcome to Hack the North!'}</Title>
+              <Title level={3}>{'Welcome to Hackathon Global!'}</Title>
               <Typography.Text type="secondary">
                 {'Login to view exclusive events...'}
               </Typography.Text>
