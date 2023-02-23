@@ -61,9 +61,4 @@
     "prettier": "2.8.4",
     "react-router-dom": "^6.8.1"
   },
-  "root": "build/",
-  "clean_urls": false,
-  "routes": {
-    "/**": "index.html"
-  }
 }
