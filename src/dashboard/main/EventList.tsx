@@ -1,31 +1,26 @@
-import React, { useEffect, useState } from 'react'
-import { Route } from 'react-router-dom'
-import { TEvent, TEventType } from '../../types/types'
-import EventCard from './EventCard'
+import React from 'react'
+import { TEventType } from '../../types/types'
+import EventCard from './EventCard/EventCard'
 import uniqid from 'uniqid'
-import { getEvents } from '../../api/getEvents'
 import {
   useDashboardContext,
   sortOptions,
-  SortOption,
-  FilterOption,
   filterOptions,
 } from '../../contexts/dashboard'
-import { Button, Card, List, Space, Typography } from 'antd'
-import {
-  ArrowLeftOutlined,
-  DownOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
+import { Card, List, Typography } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Select, Tag } from 'antd'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import styles from './eventList.module.css'
 import Title from 'antd/es/typography/Title'
-import { COLORS, AUTHENTICATED_KEY } from '../../constants'
+import { COLORS } from '../../constants'
 import Meta from 'antd/es/card/Meta'
 
 const options = filterOptions
 
+/**************************************************
+//   function that returns filter tag component
+**************************************************/
 const tagRender = (props: CustomTagProps) => {
   const { label, value, closable, onClose } = props
 
@@ -48,15 +43,15 @@ const tagRender = (props: CustomTagProps) => {
   )
 }
 
+/**************************************************
+//   Component that displays list of events
+**************************************************/
 const EventList = (): JSX.Element => {
   const { state, actions } = useDashboardContext()
 
   const { eventsDisplay, sortBy, filterBy, isLoading } = state
 
-  const {
-    setSortAction,
-    setFilterAction,
-  } = actions
+  const { setSortAction, setFilterAction } = actions
 
   const handleSortChange = (e: number) => {
     setSortAction(e)

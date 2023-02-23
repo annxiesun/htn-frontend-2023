@@ -9,12 +9,15 @@ import {
   ShareAltOutlined,
   ArrowLeftOutlined,
 } from '@ant-design/icons'
-import { List, Popover, Badge, Card, Typography } from 'antd'
+import { Popover, Badge, Card, Typography } from 'antd'
 import moment from 'moment'
 import { useDashboardContext } from '../../contexts/dashboard'
 import styles from './eventPageStyle.module.css'
 import Title from 'antd/es/typography/Title'
 
+/**************************************************
+//   Page to display single event
+**************************************************/
 const EventPage = (): JSX.Element => {
   const { state } = useDashboardContext()
   const { authenticated, events } = state
@@ -75,6 +78,7 @@ const EventPage = (): JSX.Element => {
     related_events,
   } = event
 
+  // FIXME(anniesun) duplicate of url & date format in event page, need to consolidate both to context
   const startDate = moment.utc(start_time).format(DATE_FORMAT)
 
   //NOTE(anniesun): start dates and end dates same
@@ -83,6 +87,7 @@ const EventPage = (): JSX.Element => {
   const startTime = moment.utc(start_time).format(TIME_FORMAT)
   const endTime = moment.utc(end_time).format(TIME_FORMAT)
 
+  // Generates URL of event
   const getUrl = (urlId: number) => {
     return (
       window.location.protocol +

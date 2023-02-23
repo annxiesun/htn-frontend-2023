@@ -8,8 +8,10 @@ import { AUTHENTICATED_KEY } from '../../constants'
 const USERNAME = 'chubbybunny'
 const PASSWORD = 'password'
 
+/**************************************************
+//   Login component
+**************************************************/
 const Login = (): JSX.Element => {
-  const [passwordVisible, setPasswordVisible] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loginSuccess, setLoginSuccess] = useState(false)

@@ -1,8 +1,11 @@
-import React, { useReducer, createContext, useContext } from 'react'
+import React, { useReducer, useContext } from 'react'
 import { getEvents } from '../api/getEvents'
 
 import { TEvent, TEventType } from '../types/types'
 
+/**************************************************
+//   SORT & FILTER OPTIONS
+**************************************************/
 export type SortOption = {
   label: string
   value: number
@@ -54,6 +57,9 @@ export const filterOptions: FilterOption[] = [
   },
 ]
 
+/**************************************************
+//   STATE
+**************************************************/
 interface DashboardState {
   events: TEvent[]
   eventsDisplay: TEvent[]
@@ -61,10 +67,6 @@ interface DashboardState {
   sortBy: number
   filterBy: TEventType[]
   authenticated: boolean
-}
-
-interface DashboardContextProviderType {
-  children?: React.ReactNode
 }
 
 const initialState: DashboardState = {
@@ -76,6 +78,9 @@ const initialState: DashboardState = {
   authenticated: false,
 }
 
+/**************************************************
+//   ACTIONS
+**************************************************/
 enum ActionType {
   SetEventList = 'SET_EVENT_LIST',
   SetError = 'SET_ERROR',
@@ -125,6 +130,9 @@ type Action =
   | SetFilterAction
   | SetAuthenticatedAction
 
+/**************************************************
+//   ACTION GENERATORS
+**************************************************/
 const setEventListAction = (events: TEvent[]): SetEventListAction => ({
   type: ActionType.SetEventList,
   events,
@@ -154,6 +162,9 @@ const setAuthenticatedAction = (value: boolean): SetAuthenticatedAction => ({
   value,
 })
 
+/**************************************************
+//   ACTION HANDLERS & FUNCTIONALITY
+**************************************************/
 function getEventListMiddleware(
   state: DashboardState,
   dispatch: React.Dispatch<Action>
@@ -240,6 +251,9 @@ function setAuthenticatedActionHandler(
   return { ...state, authenticated: value }
 }
 
+/**************************************************
+//   REDUCER
+**************************************************/
 function eventListReducer(
   state: DashboardState,
   action: Action
@@ -278,6 +292,9 @@ function eventListReducer(
   return next
 }
 
+/**************************************************
+//   EXPORTED CONTEXT
+**************************************************/
 interface DashboardContextType {
   state: DashboardState
   actions: {
@@ -291,6 +308,10 @@ interface DashboardContextType {
 const DashboardContext = React.createContext<DashboardContextType | undefined>(
   undefined
 )
+
+interface DashboardContextProviderType {
+  children?: React.ReactNode
+}
 
 const DashboardContextProvider = ({
   children,

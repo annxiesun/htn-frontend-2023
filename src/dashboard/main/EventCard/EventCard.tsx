@@ -1,21 +1,23 @@
+import React from 'react'
 import {
   LinkOutlined,
   ShareAltOutlined,
   UnlockOutlined,
 } from '@ant-design/icons'
-import { Badge, Card, List, Popover } from 'antd'
+import { Badge, List, Popover } from 'antd'
 import moment from 'moment'
-import React, { useEffect } from 'react'
-import { Route } from 'react-router-dom'
-import { TEvent } from '../../types/types'
+import { TEvent } from '../../../types/types'
 import styles from './eventCardStyle.module.css'
-import { COLORS, DATE_FORMAT, TIME_FORMAT } from '../../constants'
-import { useDashboardContext } from '../../contexts/dashboard'
+import { COLORS, DATE_FORMAT, TIME_FORMAT } from '../../../constants'
+import { useDashboardContext } from '../../../contexts/dashboard'
 
 interface EventCardProps {
   event: TEvent
 }
 
+/**************************************************
+//   Card display in EventList
+**************************************************/
 const EventCard = ({ event }: EventCardProps): JSX.Element => {
   const {
     id,
@@ -32,6 +34,7 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
   const { state } = useDashboardContext()
   const { authenticated } = state
 
+  // FIXME(anniesun) duplicate of url & date format in event page, need to consolidate both to context
   const startDate = moment.utc(start_time).format(DATE_FORMAT)
 
   //NOTE(anniesun): start dates and end dates same
@@ -40,6 +43,7 @@ const EventCard = ({ event }: EventCardProps): JSX.Element => {
   const startTime = moment.utc(start_time).format(TIME_FORMAT)
   const endTime = moment.utc(end_time).format(TIME_FORMAT)
 
+  // Generates URL of event
   const url =
     window.location.protocol + '//' + window.location.host + `/events/${id}`
   const copyShareUrl = () => {

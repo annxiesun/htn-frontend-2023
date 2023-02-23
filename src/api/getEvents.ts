@@ -1,5 +1,8 @@
 import { TEvent } from '../types/types'
 
+/**************************************************
+//  Retrieves event list
+**************************************************/
 export function getEvents(): Promise<TEvent[]> {
   const res = new Promise<TEvent[]>((resolve, reject) => {
     fetch('https://api.hackthenorth.com/v3/events')
@@ -15,6 +18,9 @@ export function getEvents(): Promise<TEvent[]> {
   return res
 }
 
+/**************************************************
+//   Gets single event
+**************************************************/
 export function getEvent(eventId: number): Promise<TEvent> {
   const res = new Promise<TEvent>((resolve, reject) => {
     if(eventId < 1 || eventId > 15) {
