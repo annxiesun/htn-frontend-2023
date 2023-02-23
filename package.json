@@ -1,7 +1,7 @@
 {
   "name": "htn-frontend-2022",
   "version": "0.1.0",
-  "homepage": "https://annxiesun.github.io/htn-frontend-2023/",
+  "homepage": "https://annxiesun.github.io/",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
@@ -25,7 +25,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "serve -s build",
+    "start": "react-scripts start",
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -60,5 +60,5 @@
     "eslint-plugin-react": "^7.32.2",
     "prettier": "2.8.4",
     "react-router-dom": "^6.8.1"
-  },
+  }
 }
